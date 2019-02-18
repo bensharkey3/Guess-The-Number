@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 
 name = input('Enter your name:  ')
 
@@ -23,6 +24,16 @@ while playing == 'y':
     print('you got it!')
     print('it took you', count, 'guesses')
     print('')
+    
+    #df = pd.DataFrame(columns=['Date', 'Name', 'NumberOfGuesses'])
+    #df.to_csv('GuessTheNumberGame.csv', index=False)
+    '''only required to create a new csv'''
+    
+    df = pd.read_csv('GuessTheNumberGame.csv')
+    df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
+    df = df.append(df2)
+    df.to_csv('GuessTheNumberGame.csv', index=False)
+    
     play_again = str(input('Play again? (enter y or n):  '))
     if play_again == 'n':
         input('Thanks for playing!')
