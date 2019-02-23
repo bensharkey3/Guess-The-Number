@@ -25,10 +25,11 @@ while playing == 'y':
     print('it took you', count, 'guesses')
     print('')
     
+    '''only required to create a new csv'''
     #df = pd.DataFrame(columns=['Date', 'Name', 'NumberOfGuesses'])
     #df.to_csv('GuessTheNumberGame.csv', index=False)
-    '''only required to create a new csv'''
     
+    '''user stats'''
     csvfileloc = 'C:\\Users\\user\\Google Drive\\Guess-The-Number\\GuessTheNumberGameData.csv'
     df = pd.read_csv(csvfileloc)
     df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
@@ -52,6 +53,6 @@ while playing == 'y':
         print('invalid response, please enter y or n')
         play_again = str(input('Play again? (enter y or n):  '))
 
-# to do
+# to do:
 # answer verification
 # guess charts
