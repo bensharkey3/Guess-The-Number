@@ -1,6 +1,20 @@
 import random
 import pandas as pd
 
+def verify_guess(i):
+    '''validates guess to make sure its a number bertween 1-100'''
+    while True:
+        try:
+            i = int(i)
+            if i>0 and i<101:
+                return i
+            else:
+                raise
+            break
+        except:
+            print('not a valid number!')
+            i = input('Guess a number between 1 and 100:  ')
+
 name = input('Enter your name:  ')
 
 playing = 'y'
@@ -9,7 +23,7 @@ while playing == 'y':
     answer = random.randint(1,100)
     print('')
     print('Ok', name)
-    guess = int(input('Guess a number between 1 and 100:  '))
+    guess = verify_guess(input('Guess a number between 1 and 100:  '))
 
     count = 1
 
@@ -18,11 +32,11 @@ while playing == 'y':
             print('lower!')
         elif guess < answer:
             print('higher!')
-        guess = int(input('guess again:  '))
+        guess = verify_guess(input('guess again:  '))
         count += 1
 
     print('you got it!')
-    print('it took you', count, 'guesses')
+    print('it took you {} guesses'.format(count))
     print('')
     
     '''only required to create a new csv'''
@@ -45,7 +59,7 @@ while playing == 'y':
     
     play_again = str(input('Play again? (enter y or n):  '))
     if play_again == 'n':
-        input('Thanks for playing!')
+        input('Thanks for playing! - press enter to exit')
         playing = 'n'
     elif play_again =='y':
         playing = 'y'
@@ -54,5 +68,5 @@ while playing == 'y':
         play_again = str(input('Play again? (enter y or n):  '))
 
 # to do:
-# answer verification
-# guess charts
+# guess charts and stats
+# if csv file doesnt exist create a new one in pwd
