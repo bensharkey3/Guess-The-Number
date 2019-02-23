@@ -33,6 +33,8 @@ while playing == 'y':
     df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
     df = df.append(df2)
     df.to_csv('GuessTheNumberGame.csv', index=False)
+    df = pd.read_csv('GuessTheNumberGame.csv')
+    print(df.groupby('Name').mean().sort_values(by='NumberOfGuesses').reset_index())
     
     play_again = str(input('Play again? (enter y or n):  '))
     if play_again == 'n':
