@@ -39,6 +39,7 @@ def user_stats():
     df5 = df.groupby('Name')[['NumberOfGuesses']].min()
     dfprint = df3.merge(df4, on='Name').merge(df5, on='Name')
     dfprint.rename(columns={'NumberOfGuesses_x':'Ave Number of Guesses', 'Date':'Games Played', 'NumberOfGuesses_y':'Best'}, inplace=True)
+    dfprint['Ave Number of Guesses'] = dfprint['Ave Number of Guesses'].round(2)
     print(dfprint)
 
 
@@ -69,15 +70,17 @@ while playing == 'y':
 
     user_stats()
 
-    play_again = str(input('Play again? (enter y or n):  '))
-    if play_again == 'n':
-        input('Thanks for playing! - press enter to exit')
-        playing = 'n'
-    elif play_again =='y':
-        playing = 'y'
-    else:
-        print('invalid response, please enter y or n')
-        play_again = str(input('Play again? (enter y or n):  '))
+    while True:
+        playagain = str(input('Play again? (enter y or n):  '))
+        if playagain == 'n':
+            input('Thanks for playing! - press enter to exit')
+            playing = 'n'
+            break
+        elif playagain =='y':
+            playing = 'y'
+            break
+        else:
+            print('invalid response, please enter y or n')
 
 # to do:
 # chart user statistics
