@@ -1,4 +1,5 @@
 import random
+import os
 import pandas as pd
 
 def verify_guess(i):
@@ -16,7 +17,7 @@ def verify_guess(i):
             i = input('Guess a number between 1 and 100:  ')
 
 def run_program():
-
+    '''runs the program'''
     name = input('Enter your name:  ')
 
     playing = 'y'
@@ -41,13 +42,19 @@ def run_program():
         print('it took you {} guesses'.format(count))
         print('')
 
-        '''only required to create a new csv'''
-        #df = pd.DataFrame(columns=['Date', 'Name', 'NumberOfGuesses'])
-        #df.to_csv('GuessTheNumberGame.csv', index=False)
-
         '''user stats'''
-        csvfileloc = 'C:\\Users\\user\\Google Drive\\Guess-The-Number\\GuessTheNumberGameData.csv'
-        df = pd.read_csv(csvfileloc)
+        try:
+            csvfileloc = 'C:\\Users\\user\\Google Drive\\Guess-The-Number\\GuessTheNumberGameData.csv'
+            df = pd.read_csv(csvfileloc)
+        except:
+            try:
+                csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
+                df = pd.read_csv(csvfileloc)
+            except:
+                df = pd.DataFrame(columns=['Date', 'Name', 'NumberOfGuesses'])
+                csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
+                df.to_csv(csvfileloc, index=False)
+
         df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
         df = df.append(df2)
         df.to_csv(csvfileloc, index=False)
