@@ -153,6 +153,5 @@ while playing == 'y':
 # histograam ticks in between number labels
 # table index to start at 1
 # table formatting
-# chart % formatting zero decimals
-# text result is returning incorrectly
+# formatting zero decimals
 # execute code directly from github
