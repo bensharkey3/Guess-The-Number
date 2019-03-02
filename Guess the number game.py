@@ -16,9 +16,23 @@ def verify_guess(i):
             break
         except:
             print('not a valid number!')
-            i = input('Guess a number between 1 and 100:  ')
+            i = input('guess a number between 1 and 100:  ')
 
-def user_stats():
+def verify_num(i):
+    '''validates a guess to make sure its a number between 1-100'''
+    while True:
+        try:
+            i = int(i)
+            if i>0 and i<101:
+                return i
+            else:
+                raise
+            break
+        except:
+            print('not a valid number!')
+            i = input('Enter a number for the computer to guess:  ')
+            
+def stats():
     '''generates user stats'''
     try:
         csvfileloc = 'C:\\Users\\user\\Google Drive\\Guess-The-Number\\GuessTheNumberGameData.csv'
@@ -31,7 +45,7 @@ def user_stats():
             df = pd.read_csv('https://raw.githubusercontent.com/bensharkey3/Guess-The-Number/master/GuessTheNumberGameData.csv')
             csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
             df.to_csv(csvfileloc, index=False)
-    df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
+    df2 = pd.DataFrame([[pd.to_datetime('today'), name, count], [pd.to_datetime('today'), 'the computer', ccount]], columns=['Date', 'Name', 'NumberOfGuesses'])
     df = df.append(df2)
     df.to_csv(csvfileloc, index=False)
     df = pd.read_csv(csvfileloc)
@@ -59,8 +73,9 @@ playing = 'y'
 
 while playing == 'y':
     answer = random.randint(1,100)
-    print('')
-    print('Ok', name)
+    print(' ')
+    print('ok', name)
+    print(' ')
     guess = verify_guess(input('Guess a number between 1 and 100:  '))
     count = 1
     while guess != answer:
@@ -72,10 +87,44 @@ while playing == 'y':
         count += 1
 
     print('you got it!')
-    print('it took you {} guesses'.format(count))
-    print('')
+    print('you guessed it in {} guesses'.format(count))
+    print(' ')
+    input('press enter to see how you compared to the computer')
+    print(' ')
 
-    user_stats()
+    '''computers guesses'''
+    low = 1
+    high = 100
+    ccount = 1
+    cguess = random.choice([36, 64])
+    while cguess != answer:
+        print("the computer's guess {}:  {}".format(ccount, cguess))
+        if cguess > answer:
+            print('lower!')
+        elif cguess < answer:
+            print('higher!')
+        if cguess > answer:
+            high = cguess
+        elif cguess < answer:
+            low = cguess + 1
+        cguess = (low+high)//2
+        ccount += 1
+    
+    print("the computer's guess {}:  {}".format(ccount, cguess))
+    print('got it!')
+    print('The computer took {} guesses'.format(ccount))
+    print(' ')
+    if ccount > count:
+        print(' - you defeated the computer by {} guess(es)! - '.format(ccount-count))
+        print(' ')
+    elif count < ccount:
+        print(' - the computer defeated you by {} guess(es) - '.format(count-ccount))
+        print(' ')
+    else:
+        print(" - it's a draw! - ")
+        print(' ')
+    
+    stats()
 
     while True:
         playagain = str(input('Play again? (enter y or n):  '))
@@ -93,4 +142,8 @@ while playing == 'y':
 # histogram ticks in between number labels
 # table index to start at 1
 # table formatting
+# chart % formatting zero decimals
 # read csv from github and then save on local
+# computer stats to csv
+# win draw loss % vs computer
+# execute code directly from github
