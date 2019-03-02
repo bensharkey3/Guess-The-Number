@@ -45,7 +45,7 @@ def stats():
             df = pd.read_csv('https://raw.githubusercontent.com/bensharkey3/Guess-The-Number/master/GuessTheNumberGameData.csv')
             csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
             df.to_csv(csvfileloc, index=False)
-    df2 = pd.DataFrame([[pd.to_datetime('today'), name, count], [pd.to_datetime('today'), 'the computer', ccount]], columns=['Date', 'Name', 'NumberOfGuesses'])
+    df2 = pd.DataFrame([[pd.to_datetime('today'), name, count, diff], [pd.to_datetime('today'), 'the computer', ccount, -diff]], columns=['Date', 'Name', 'NumberOfGuesses', 'DiffToOpponent'])
     df = df.append(df2)
     df.to_csv(csvfileloc, index=False)
     df = pd.read_csv(csvfileloc)
@@ -53,9 +53,19 @@ def stats():
     df4 = df.groupby('Name')[['Date']].count()
     df5 = df.groupby('Name')[['NumberOfGuesses']].min()
     dfprint = df3.merge(df4, on='Name').merge(df5, on='Name')
-    dfprint.rename(columns={'NumberOfGuesses_x':'Ave Number of Guesses', 'Date':'Games Played', 'NumberOfGuesses_y':'Best'}, inplace=True)
-    dfprint['Ave Number of Guesses'] = dfprint['Ave Number of Guesses'].round(2)
+    df6 = df[df['DiffToOpponent'].notnull()].groupby('Name').count()[['Date']]
+    df6.rename(columns={'Date':'Played'}, inplace=True)
+    df6['Lost'] = df[df['DiffToOpponent'] > 0].groupby('Name').count()['Date']
+    df6['Won'] = df[df['DiffToOpponent'] < 0].groupby('Name').count()['Date']
+    df6['Drew'] = df[df['DiffToOpponent'] == 0].groupby('Name').count()['Date']
+    dfprint = dfprint.merge(df6, how='left', on='Name')
+    dfprint.rename(columns={'NumberOfGuesses_x':'Average', 'Date':'Turns', 'NumberOfGuesses_y':'Best'}, inplace=True)
+    dfprint['Average'] = dfprint['Average'].round(2)
+    dfprint['W/L%'] = round(dfprint['Won']*100 / (dfprint['Lost'] + dfprint['Won']), 1)
+    dfprint = dfprint[['Name', 'Average', 'Turns', 'Best', 'Played', 'Won', 'Lost', 'Drew', 'W/L%']]
+    dfprint.fillna(value=0, inplace=True)
     print(dfprint)
+    '''generates histogram'''
     plt.hist(df[(df['Name'] == name)]['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='b', alpha=0.3, label=name)
     plt.hist(df['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='r', alpha=0.3, label='all players', )
     plt.title("Number of Guesses")
@@ -110,18 +120,19 @@ while playing == 'y':
         cguess = (low+high)//2
         ccount += 1
     
+    diff = count - ccount
     print("the computer's guess {}:  {}".format(ccount, cguess))
     print('got it!')
     print('The computer took {} guesses'.format(ccount))
     print(' ')
     if ccount > count:
-        print(' - you defeated the computer by {} guess(es)! - '.format(ccount-count))
+        print(' - you defeated the computer by {} guess(es)!'.format(-diff))
         print(' ')
-    elif count < ccount:
-        print(' - the computer defeated you by {} guess(es) - '.format(count-ccount))
+    elif count > ccount:
+        print(' - the computer defeated you by {} guess(es)'.format(diff))
         print(' ')
     else:
-        print(" - it's a draw! - ")
+        print(" - it's a draw!")
         print(' ')
     
     stats()
@@ -139,11 +150,9 @@ while playing == 'y':
             print('invalid response, please enter y or n')
 
 # to do:
-# histogram ticks in between number labels
+# histograam ticks in between number labels
 # table index to start at 1
 # table formatting
 # chart % formatting zero decimals
-# read csv from github and then save on local
-# computer stats to csv
-# win draw loss % vs computer
+# text result is returning incorrectly
 # execute code directly from github
