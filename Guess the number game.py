@@ -2,6 +2,7 @@ import random
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 
 def verify_guess(i):
     '''validates a guess to make sure its a number between 1-100'''
@@ -27,7 +28,7 @@ def user_stats():
             csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
             df = pd.read_csv(csvfileloc)
         except:
-            df = pd.DataFrame(columns=['Date', 'Name', 'NumberOfGuesses'])
+            df = pd.read_csv('https://raw.githubusercontent.com/bensharkey3/Guess-The-Number/master/GuessTheNumberGameData.csv')
             csvfileloc = '{}\\GuessTheNumberGameData.csv'.format(os.getcwd())
             df.to_csv(csvfileloc, index=False)
     df2 = pd.DataFrame([[pd.to_datetime('today'), name, count]], columns=['Date', 'Name', 'NumberOfGuesses'])
@@ -42,11 +43,12 @@ def user_stats():
     dfprint['Ave Number of Guesses'] = dfprint['Ave Number of Guesses'].round(2)
     print(dfprint)
     plt.hist(df[(df['Name'] == name)]['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='b', alpha=0.3, label=name)
-    plt.hist(df['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='r', alpha=0.3, label='All Players', )
+    plt.hist(df['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='r', alpha=0.3, label='all players', )
     plt.title("Number of Guesses")
     plt.legend(loc='upper left')
     plt.xticks([1,2,3,4,5,6,7,8,9])
     plt.ylabel("Frequency")
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
     plt.show()
 
 
@@ -91,5 +93,4 @@ while playing == 'y':
 # histogram ticks in between number labels
 # table index to start at 1
 # table formatting
-# frequency as %
 # read csv from github and then save on local
