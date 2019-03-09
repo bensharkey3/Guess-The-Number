@@ -66,8 +66,8 @@ def stats():
     dfprint.fillna(value=0, inplace=True)
     print(dfprint)
     '''generates histogram'''
-    plt.hist(df[(df['Name'] == name)]['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='b', alpha=0.3, label=name)
-    plt.hist(df['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', normed=True, color='r', alpha=0.3, label='all players', )
+    plt.hist(df[(df['Name'] == name)]['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', density=True, color='b', alpha=0.3, label=name)
+    plt.hist(df['NumberOfGuesses'], bins=(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5), histtype='stepfilled', density=True, color='r', alpha=0.3, label='all players', )
     plt.title("Number of Guesses")
     plt.legend(loc='upper left')
     plt.xticks([1,2,3,4,5,6,7,8,9])
